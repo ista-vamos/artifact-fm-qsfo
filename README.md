@@ -3,6 +3,10 @@
 Software artifact for the paper *Monitoring quantified first-order logic*
 accepted at FM 2026.
 
+## TODO
+
+- Make online version of the algorithm accessible
+
 ### Other comments
 
 - The source code of `qsfo` project used in this paper differs slightly from

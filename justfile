@@ -7,7 +7,8 @@ default:
     @just --list
 
 smoketest:
-  @just run-avoidance  --n-random-traces=1
+  @just run-avoidance --n-random-traces=1
+  @just run-f16 --n-random-traces=1
 
 run-avoidance-P1 *args:
   uv run experiments/avoidance/prp1.py \
@@ -35,12 +36,41 @@ run-avoidance *args:
   @just run-avoidance-P3 {{args}}
   @just run-avoidance-P123 {{args}}
 
-run:
+run-f16-P1 *args:
+  uv run experiments/f16/prp1.py \
+    --traces experiments/f16/traces \
+    --out results/f16/prp1 {{ args }}
+
+run-f16-P2 *args:
+  uv run experiments/f16/prp2.py \
+    --traces experiments/f16/traces \
+    --out results/f16/prp2  {{ args }}
+
+run-f16-P3 *args:
+  uv run experiments/f16/prp3.py \
+    --traces experiments/f16/traces \
+    --out results/f16/prp3  {{ args }}
+
+run-f16-P123 *args:
+  uv run experiments/f16/prp123.py \
+    --traces experiments/f16/traces \
+    --out results/f16/prp123  {{ args }}
+
+run-f16 *args:
+  @just run-f16-P1 {{args}}
+  @just run-f16-P2 {{args}}
+  @just run-f16-P3 {{args}}
+  @just run-f16-P123 {{args}}
+
+run-short:
+  @just run-avoidance --n-random-traces=50
+  @just run-f16  --n-random-traces=10
+
+run-medium:
+  @just run-avoidance
+  @just run-f16 --n-random-traces=20
+
+run-full:
   @just run-avoidance
   @just run-f16
-
-# Build the project with all its features
-# build-all:
-#     {{ CARGO }} build --all-targets --all-features {{ profile_flag }}
-#     @just build-python
 

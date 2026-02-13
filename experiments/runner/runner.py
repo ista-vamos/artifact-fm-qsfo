@@ -117,7 +117,7 @@ def run(prp, args):
 
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-j", metavar="PROC_NUM", action="store", type=int)
+    parser.add_argument("-j", metavar="PROC_NUM", action="store", type=int, default=1)
     parser.add_argument(
         "--out",
         help="Name of the output file. Default is 'out.csv'",

@@ -3,17 +3,17 @@ from random import randrange
 
 import datetime
 from subprocess import Popen, PIPE, TimeoutExpired
-from os.path import dirname, basename, join, abspath, isdir
-import os
-from os import listdir, makedirs
+from os.path import basename, join, abspath, isdir
+from os import listdir, makedirs, getcwd, getpgid, setsid, killpg
 from sys import stderr, stdout
 from multiprocessing import Pool
 import signal
 
 import argparse
 
-SELFDIR = join(dirname(__file__))
-LOGFILE = join(SELFDIR, "log.txt")
+# SELFDIR = join(dirname(__file__))
+DIR = getcwd()
+LOGFILE = join(DIR, "log.txt")
 
 
 def errlog(*args):
@@ -32,13 +32,13 @@ def run_monitor(arg):
     cmd.append(f"--csv={args.out}/{basename(trace)}")
     cmd.append("--no-stdout")
 
-    p = Popen(cmd, stderr=PIPE, stdout=PIPE, preexec_fn=os.setsid)
+    p = Popen(cmd, stderr=PIPE, stdout=PIPE, preexec_fn=setsid)
     try:
         out, err = p.communicate(timeout=args.timeout)
         if p.returncode != 0:
             errlog("------", " ".join(cmd), "------", out, "------", err)
     except TimeoutExpired:
-        os.killpg(os.getpgid(p.pid), signal.SIGTERM)
+        killpg(getpgid(p.pid), signal.SIGTERM)
         out, err = p.communicate(timeout=10)
     return (trace, p.returncode, cmd, out, err)
 
@@ -55,7 +55,7 @@ def run(prp, args):
     if args.j is None:
         print(" ... (the number of used processes can be adjusted by parameter `-j`)")
 
-    print(f" ... It's {datetime.datetime.now().time()}")
+    print(f" ... it's {datetime.datetime.now().time()}")
     stdout.flush()
 
     print(f" ... finding CSV traces in `{args.traces}`")
@@ -110,19 +110,19 @@ def run(prp, args):
             n += 1
 
         print("\nAll done!")
-        print(f" ... It's {datetime.datetime.now().time()}")
+        print(f" ... it's {datetime.datetime.now().time()}")
         print("-------------------------------------")
         print(f"Results stored into `{args.out}`")
 
 
-def parse_cmd():
+def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("-j", metavar="PROC_NUM", action="store", type=int)
     parser.add_argument(
         "--out",
         help="Name of the output file. Default is 'out.csv'",
         action="store",
-        default=join(SELFDIR, "results"),
+        default=join(DIR, "results"),
     )
     parser.add_argument(
         "--verbose",
@@ -134,43 +134,7 @@ def parse_cmd():
     parser.add_argument(
         "--traces", help="Directory with traces", action="store", required=True
     )
-    parser.add_argument(
-        "--t_s",
-        help="Parameter 't_s' of the formula (after this time, the velocity must be less than v_max)",
-        action="store",
-        type=float,
-        default=2.0,
-    )
-    parser.add_argument(
-        "--v_max",
-        help="Parameter 'v_max' of the formula (maximal velocity in the x direction)",
-        action="store",
-        type=float,
-        default=1.0,
-    )
 
-    parser.add_argument(
-        "--horizon",
-        help="Consider this horizon while monitoring (0 for the original P1 formula)",
-        action="store",
-        type=int,
-        default=0,
-    )
-
-    parser.add_argument(
-        "--sampling",
-        help="Consider this sampling interval (0.1 for prerecorded traces)",
-        action="store",
-        type=float,
-        default=0.1,
-    )
-    parser.add_argument(
-        "--trials",
-        help="How many times repeat each run",
-        action="store",
-        type=int,
-        default=10,
-    )
     parser.add_argument(
         "--timeout",
         help="Timeout in seconds (default is no timeout)",
@@ -193,17 +157,11 @@ def parse_cmd():
         default="python -OO qsfo/main.py",
     )
 
+    return parser
+
+
+def parse_cmd(parser):
     args = parser.parse_args()
     args.out = abspath(args.out)
 
     return args
-
-
-if __name__ == "__main__":
-    args = parse_cmd()
-
-    # PRP 1
-    prp = f"t < {args.t_s} \\or vx(t) < {args.v_max}"
-
-    # do it!
-    run(prp, args)

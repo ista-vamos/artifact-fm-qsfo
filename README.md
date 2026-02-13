@@ -9,6 +9,7 @@ accepted at FM 2026.
 
 ### Other comments
 
+- Avoidance runs ~ 10min on 4 cores
 - The source code of `qsfo` project used in this paper differs slightly from
   the source code used for the original experiments: there have been comments
   structural and cosmetic changes, and added missing features to the parser.

@@ -33,14 +33,25 @@ def run_monitor(arg):
     cmd.append("--no-stdout")
 
     p = Popen(cmd, stderr=PIPE, stdout=PIPE, preexec_fn=setsid)
+    timeout = False
     try:
         out, err = p.communicate(timeout=args.timeout)
         if p.returncode != 0:
             errlog("------", " ".join(cmd), "------", out, "------", err)
     except TimeoutExpired:
-        killpg(getpgid(p.pid), signal.SIGTERM)
+        killpg(getpgid(p.pid), signal.SIGINT)
         out, err = p.communicate(timeout=10)
-    return (trace, p.returncode, cmd, out, err)
+        if p.poll() is None:
+            killpg(getpgid(p.pid), signal.SIGTERM)
+        if p.wait(timeout=2) is None:
+            killpg(getpgid(p.pid), signal.SIGKILL)
+        timeout = True
+    except Exception:
+        killpg(getpgid(p.pid), signal.SIGINT)
+        killpg(getpgid(p.pid), signal.SIGTERM)
+        killpg(getpgid(p.pid), signal.SIGKILL)
+
+    return (trace, p.returncode, timeout, cmd, out, err)
 
 
 def get_params(traces_dir, traces, prp, args):
@@ -97,13 +108,17 @@ def run(prp, args):
         for result in pool.imap_unordered(
             run_monitor, get_params(args.traces, selected_traces, prp, args)
         ):
-            trace, exitcode, cmd, out, err = result
-            if exitcode != 0:
+            trace, exitcode, timeout, cmd, out, err = result
+            if exitcode != 0 and not timeout:
                 print(f"Failed running monitor, see `{LOGFILE}`", file=stderr)
 
             progress = 100 * (n / N)
             if verbose:
-                print(f"{progress: .2f}%: finished", trace)
+                print(
+                    f"{progress: .2f}%: finished",
+                    trace,
+                    "(hit timeout)" if timeout else "",
+                )
             else:
                 print(f"\r\033[32;1mDone: {progress: .2f}%\033[0m", end="")
 

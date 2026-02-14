@@ -8,7 +8,7 @@ default:
 
 smoketest:
   @just run-avoidance --n-random-traces=1
-  @just run-f16 --n-random-traces=1
+  @just run-f16 --n-random-traces=1 --timeout=20
 
 run-avoidance-P1 *args:
   uv run experiments/avoidance/prp1.py \
@@ -63,12 +63,12 @@ run-f16 *args:
   @just run-f16-P123 {{args}}
 
 run-short:
-  @just run-avoidance --n-random-traces=50
-  @just run-f16  --n-random-traces=10
+  @just run-avoidance --n-random-traces=50 --timeout=30
+  @just run-f16  --n-random-traces=10 --timeout=30
 
 run-medium:
-  @just run-avoidance
-  @just run-f16 --n-random-traces=20
+  @just run-avoidance --timeout=60
+  @just run-f16 --n-random-traces=20 --timeout=60
 
 run-full:
   @just run-avoidance

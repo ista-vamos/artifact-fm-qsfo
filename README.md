@@ -35,6 +35,8 @@ From the artifact directory, run
 just smoketest
 ```
 
+A smoke-test can take a few minutes.
+
 ### Running experiments
 
 Run one of the following commands, depending on what experiments you want to run.

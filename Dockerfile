@@ -15,7 +15,8 @@ RUN apt-get install -y --no-install-recommends\
         time\
         libgmp-dev\
         ca-certificates\
-        ppl-dev
+        ppl-dev\
+        just
 
 # Install uv
 ADD https://astral.sh/uv/install.sh /uv-installer.sh
@@ -26,11 +27,6 @@ COPY . /opt/artifact
 WORKDIR /opt/artifact/
 
 RUN uv sync
-
-# RUN git submodule update --init
-
-FROM base AS artifact-plots
 RUN uv pip install polars
 
-FROM artifact-plots AS artifact
 WORKDIR /opt/artifact

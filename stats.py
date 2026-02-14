@@ -67,5 +67,5 @@ if __name__ == "__main__":
                     f"WARNING: skipping `{fullpath2}` which I did not expect in results directory"
                 )
                 continue
-        files = glob.glob(f"{fullpath2}/*.csv")
-        print(sd, pdir, process_csvs(files))
+            files = glob.glob(f"{fullpath2}/*.csv")
+            print(f"{sd: <12}{pdir: <6} {process_csvs(files): <8.4f}")

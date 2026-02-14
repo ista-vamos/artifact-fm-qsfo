@@ -6,9 +6,14 @@
 default:
     @just --list
 
+results:
+  uv run stats.py results
+
 smoketest:
   @just run-avoidance --n-random-traces=1
   @just run-f16 --n-random-traces=1 --timeout=20
+  @echo "------------------------"
+  @just results
 
 run-avoidance-P1 *args:
   uv run experiments/avoidance/prp1.py \
@@ -65,12 +70,18 @@ run-f16 *args:
 run-short:
   @just run-avoidance --n-random-traces=50 --timeout=30
   @just run-f16  --n-random-traces=10 --timeout=30
+  @echo "------------------------"
+  @just results
 
 run-medium:
   @just run-avoidance --timeout=60
   @just run-f16 --n-random-traces=20 --timeout=60
+  @echo "------------------------"
+  @just results
 
 run-full:
   @just run-avoidance
   @just run-f16
+  @echo "------------------------"
+  @just results
 

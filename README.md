@@ -47,7 +47,7 @@ just run-medium   # Run experiments on with random benchmarks in each category
 just run-full     # Run full experiments
 ```
 
-Short experiments should take a bit more then 1 hour, full experiments will take more than 24 hours.
+Short experiments should take between 1 and 2 hours, full experiments will take more than 24 hours.
 To run single experiments (properties P1, P2, P3 or P 1+2+3 in avoidance or f16 simulator),
 see `just --help`.
 
@@ -55,6 +55,7 @@ Results are stored as CSV files into the directory from which you run the experi
 In case of using the docker image, this directory is `/opt/artifact/results` and
 is mounted to the host system.
 The results are automatically analyzed and table shown after the experiments finish.
+You can manually show the results by running `just results`.
 
 ### Other comments
 

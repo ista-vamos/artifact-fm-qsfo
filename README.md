@@ -5,7 +5,7 @@ accepted at FM 2026.
 
 ## Using artifact
 
-We assume that you have loaded the docker image and entered the contanier, i.e.,
+We assume that you have loaded the docker image and entered the container, i.e.,
 you have run something like:
 
 ```sh
@@ -30,14 +30,16 @@ A smoke-test can take a few minutes.
 Run one of the following commands, depending on what experiments you want to run.
 
 ```sh
-just run-short    # Run experiments with 10 random benchmarks in each category
-just run-medium   # Run experiments on with random benchmarks in each category
-just run-full     # Run full experiments
+just run-short    # Run experiments that should finish in around 20 min
+just run-medium   # Run experiments that should take around 80 min
+just run-long     # Run experiments that should take several hours
+just run-full     # Run full experiments (might be two days on single core)
 ```
 
-Short experiments should take between 1 and 2 hours, full experiments will take more than 24 hours.
 To run single experiments (properties P1, P2, P3 or P 1+2+3 in avoidance or f16 simulator),
-see `just --help`.
+see `just --help`. For single experiments, you can also specify `-j N` to execute on `N`
+cores. E.g., `just run-avoidance -j 4`. To use more cores in one of pre-defined configurations,
+modify the `justfile`.
 
 Results are stored as CSV files into the directory from which you run the experiments.
 In case of using the docker image, this directory is `/opt/artifact/results` and

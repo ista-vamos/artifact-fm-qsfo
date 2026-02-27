@@ -68,4 +68,5 @@ if __name__ == "__main__":
                 )
                 continue
             files = glob.glob(f"{fullpath2}/*.csv")
-            print(f"{sd: <12}{pdir: <6} {process_csvs(files): <8.4f}")
+            if files:
+                print(f"{sd: <12}{pdir: <6} {process_csvs(files): <8.4f}")

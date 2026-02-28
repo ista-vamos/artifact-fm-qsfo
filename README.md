@@ -1,6 +1,6 @@
-# Artifact for *Monitoring quantified signal first-order logic
+# Artifact for *Quantified Monitoring of Signal First-Order Logic
 
-Software artifact for the paper *Monitoring quantified first-order logic*
+Software artifact for the paper *Quantified Monitoring of Signal First-Order Logic*
 accepted at FM 2026.
 
 ## Using artifact

@@ -40,7 +40,10 @@ def run_monitor(arg):
             errlog("------", " ".join(cmd), "------", out, "------", err)
     except TimeoutExpired:
         killpg(getpgid(p.pid), signal.SIGINT)
-        out, err = p.communicate(timeout=10)
+        try:
+            out, err = p.communicate(timeout=10)
+        except TimeoutExpired:
+            pass
         if p.poll() is None:
             killpg(getpgid(p.pid), signal.SIGTERM)
         if p.wait(timeout=2) is None:

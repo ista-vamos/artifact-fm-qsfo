@@ -58,15 +58,10 @@ You can manually show the results by running `just results`.
   - stats.py          -- script to generate tables
 ```
 
-The source code of `qsfo` project (the `qsfo/` directory) used in this artifact differs
-slightly from the source code used for the original experiments: there have been small
-structural and cosmetic changes, and added missing features to the parser.
-The monitoring algorithm itself stayed untouched. The original source code
-is attached in `qsfo-paper-src.zip`. You can also check out the newest code
-at <https://github.com/ista-vamos/qsfo>.
 
 ### Using and modifying qsfo
 
+The source code of the project is in `qsfo` directory.
 To run the monitoring algorithm on a given CSV file, run:
 
 ```sh
@@ -82,6 +77,8 @@ For more about formula syntax, see the README in Github.
 
 The main algorithm is implemented in `qsfo/monitoring/quantitative.py`.
 The name of methods should mostly correspond to the names in the paper.
+
+You can also check out the newest code at <https://github.com/ista-vamos/qsfo>.
 
 ## Building the artifact
 
